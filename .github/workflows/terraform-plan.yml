@@ -1,0 +1,46 @@
+name: Terraform Plan Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.0
+
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Terraform Plan with Exit Code Capture
+        id: plan
+        run: |
+          set +e
+          terraform plan -detailed-exitcode -out=tf.plan
+          exit_code=$?
+          set -e
+          echo "Terraform plan exit code: $exit_code"
+          echo "exit_code=$exit_code" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Check Plan Result
+        run: |
+          if [ "${{ steps.plan.outputs.exit_code }}" -eq 2 ]; then
+            echo "Changes detected."
+          elif [ "${{ steps.plan.outputs.exit_code }}" -eq 0 ]; then
+            echo "No changes detected."
+          else
+            echo "Terraform plan failed."
+            exit 1
+          fi
