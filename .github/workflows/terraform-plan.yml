@@ -1,7 +1,9 @@
 name: Terraform Plan Exit Code Test
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   terraform-plan:
@@ -23,7 +25,6 @@ jobs:
         id: plan
         continue-on-error: true
         run: |
-          cd terraform-test
           terraform plan -detailed-exitcode -out=tf.plan
           exit_code=$?
           echo "Terraform plan exit code: $exit_code"
