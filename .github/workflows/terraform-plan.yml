@@ -25,7 +25,7 @@ jobs:
         run: terraform init
 
       - id: plan
-        run: terraform plan -detailed-exitcode
+        run: terraform plan -detailed-exitcode -out=tf.plan
 
       # - run: echo ${{ steps.plan.outputs.stdout }}
       # - run: echo ${{ steps.plan.outputs.stderr }}
