@@ -21,24 +21,31 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
-      - name: Terraform Plan with Exit Code Detection
-        id: plan
-        continue-on-error: true
-        run: |
-          terraform plan -detailed-exitcode -out=tf.plan
-          exit_code=$?
-          echo "Terraform plan exit code: $exit_code"
-          echo "exit_code=$exit_code" >> $GITHUB_OUTPUT
+      - id: plan
+        run: terraform plan -no-color
 
-          if [ "$exit_code" -eq 2 ]; then
-            echo "Changes detected."
-          elif [ "$exit_code" -eq 0 ]; then
-            echo "No changes detected."
-          else
-            echo "Terraform plan failed."
-            exit 1
-          fi
+      - run: echo ${{ steps.plan.outputs.stdout }}
+      - run: echo ${{ steps.plan.outputs.stderr }}
+      - run: echo ${{ steps.plan.outputs.exitcode }}
 
-      - name: Show captured exit code from plan step
-        run: |
-          echo "Captured exit code: ${{ steps.plan.outputs.exit_code }}"
+      # - name: Terraform Plan with Exit Code Detection
+      #   id: plan
+      #   continue-on-error: true
+      #   run: |
+      #     terraform plan -detailed-exitcode -out=tf.plan
+      #     exit_code=$?
+      #     echo "Terraform plan exit code: $exit_code"
+      #     echo "exit_code=$exit_code" >> $GITHUB_OUTPUT
+
+      #     if [ "$exit_code" -eq 2 ]; then
+      #       echo "Changes detected."
+      #     elif [ "$exit_code" -eq 0 ]; then
+      #       echo "No changes detected."
+      #     else
+      #       echo "Terraform plan failed."
+      #       exit 1
+      #     fi
+
+      # - name: Show captured exit code from plan step
+      #   run: |
+      #     echo "Captured exit code: ${{ steps.plan.outputs.exit_code }}"
