@@ -1,8 +1,6 @@
 terraform {
   required_version = ">= 1.4"
-}
 
-terraform {
   required_providers {
     random = {
       source  = "hashicorp/random"
@@ -11,6 +9,9 @@ terraform {
   }
 }
 
-resource "random_pet" "test" {
-  length = 2
+provider "random" {}
+
+resource "random_id" "test" {
+  byte_length = 4
 }
+
