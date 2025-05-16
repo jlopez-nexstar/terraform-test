@@ -18,7 +18,6 @@ jobs:
 
       - name: Initialize Terraform
         run: terraform init
-        working-directory: ./terraform-test
 
       - name: Terraform Plan with Exit Code Detection
         id: plan
