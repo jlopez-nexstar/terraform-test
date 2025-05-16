@@ -16,16 +16,19 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.10.0
+          terraform_version: 1.12.0
+
+      - name: version Terraform
+        run: terraform --version
 
       - name: Initialize Terraform
         run: terraform init
 
       - id: plan
-        run: terraform plan -no-color
+        run: terraform plan -detailed-exitcode
 
-      - run: echo ${{ steps.plan.outputs.stdout }}
-      - run: echo ${{ steps.plan.outputs.stderr }}
+      # - run: echo ${{ steps.plan.outputs.stdout }}
+      # - run: echo ${{ steps.plan.outputs.stderr }}
       - run: echo ${{ steps.plan.outputs.exitcode }}
 
       # - name: Terraform Plan with Exit Code Detection
